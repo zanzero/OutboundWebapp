@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="container mt-5" align="left">
+
+    <form action="{{ url_for('option') }}" method="POST">
+      Number of Calls for Re-use: <input type="text" name="calls" value="{{ option_number_of_reuse }}" size="20"><br><br>
+      Repeat every(Min.): <input type="text" name="repeat" value="{{ option_repeat_x_minutes }}" size="20"><br>
+        {% for option in options %}
+    <input type="radio" name="selected_option" value="{{ option }}" {% if option == selected_option %}checked{% endif %}> {{ option }}<br>
+  {% endfor %}
+      <br><br>
+      <button class="btn btn-primary" type="submit">RUN</button>
+    </form>
+  </div>
+{% endblock %}

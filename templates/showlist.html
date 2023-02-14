@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5" align="center">
+    {{ list_name | safe }}
+</div>
+<div class="container mt-5">
+{{ df | safe }}
+</div>
+<div class="container mt-5" align="center">
+          <form method="POST" enctype="multipart/form-data" action="{{ url_for('runlist') }}">
+      <button class="btn btn-primary" type="submit">RUN</button>
+              </form>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="container mt-5">
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+             <th>ID</th>
+            <th>Execute</th>
+            <th>StartDate</th>
+            <th>Update</th>
+            <th>Customer Number</th>
+            <th>List Name</th>
+            <th>Calls</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ row[0] }}</td>
+               <td>{{ row[1] }}</td>
+               <td>{{ row[2] }}</td>
+               <td>{{ row[3] }}</td>
+               <td>{{ row[4] }}</td>
+               <td>{{ row[5] }}</td>
+               <td>{{ row[6] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {{ pagination.links }}
+      {{ pagination.info }}
+    </div>
+<div class="container mt-5" align="center">
+          <form method="POST" enctype="multipart/form-data" action="/reuse">
+      <button class="btn btn-primary" type="submit">RUN</button>
+              </form>
+</div>
+{% endblock %}
