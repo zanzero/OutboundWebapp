@@ -2,15 +2,15 @@ import boto3
 import sqlite3
 import datetime
 import time
-from aws_cred import aws_access_key_id, aws_secret_access_key
+from aws_cred import AWSCred
 
 
 class OutboundEngine:
     db_name = "aws_outbound_db.db"
     table_name = "outbound_called"
 
-    client = boto3.client("connect", region_name="ap-southeast-1", aws_access_key_id=aws_access_key_id,
-                          aws_secret_access_key=aws_secret_access_key)
+    client = boto3.client("connect", region_name=AWSCred.region, aws_access_key_id=AWSCred.access_key,
+                          aws_secret_access_key=AWSCred.secret_access_key)
 
     option_number_of_reuse = 3
     option_repeat_x_minutes = 60
@@ -45,10 +45,10 @@ class OutboundEngine:
     def check_agent(self):
         try:
             response = OutboundEngine.client.get_current_metric_data(
-                InstanceId='91aeda1c-da5c-4dcd-bff1-9c6f9ce5d87f',
+                InstanceId=AWSCred.instance_id,
                 Filters={
                     'Queues': [
-                        '9c2adc06-6c47-4bbd-9446-c5cd0e35ee9b',
+                        AWSCred.queue_id,
                     ],
                 },
                 CurrentMetrics=[
@@ -64,9 +64,9 @@ class OutboundEngine:
 
     def outbound_call(self, destination_number):
         destination_phone_number = destination_number
-        contact_flow_id = 'c2015656-22dd-4a6d-8a87-28ad7ea80373'
-        instance_id = '91aeda1c-da5c-4dcd-bff1-9c6f9ce5d87f'
-        source_phone_number = '+6620806061'
+        contact_flow_id = AWSCred.contact_flow_id
+        instance_id = AWSCred.instance_id
+        source_phone_number = AWSCred.source_phone_number
 
         response = self.client.start_outbound_voice_contact(
             DestinationPhoneNumber=destination_phone_number,
