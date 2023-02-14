@@ -163,7 +163,7 @@ def pause_task():
 def restart_task():
     new_trigger = IntervalTrigger(minutes=int(OutboundNG.option_repeat_x_minutes))
     scheduler.reschedule_job(job.id, trigger=new_trigger)
-    print(f"Task restarted every {OutboundNG.option_repeat_x_minutes} Mins")
+    print(f"Task restarted \n Run every {OutboundNG.option_repeat_x_minutes} Mins")
 
 
 scheduler = BackgroundScheduler()
@@ -176,6 +176,5 @@ print(f"Task Started every {OutboundNG.option_repeat_x_minutes} Mins")
 def doc():
     return render_template('doc.html')
 
-
 if __name__ == '__main__':
-    app.run(debug=False, port=5000)
+    app.run(debug=True, port=5000)

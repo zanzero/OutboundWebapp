@@ -25,13 +25,21 @@ class OutboundEngine:
             print(query)
 
         elif op == "insert":
-            query = f"INSERT INTO {self.table_name} (apiexec, customernumber, datetime, list_name) \
-            VALUES ('{kwargs['api_exec']}', '{kwargs['customer_number']}', '{kwargs['date_time_now']}', '{kwargs['list_name']}')"
+            if kwargs['api_exec'] == "Y":
+                query = f"INSERT INTO {self.table_name} (apiexec, customernumber, datetime, list_name, number_of_calls) \
+                VALUES ('{kwargs['api_exec']}', '{kwargs['customer_number']}', '{kwargs['date_time_now']}', '{kwargs['list_name']}', '{kwargs['calls']}'+1)"
+            elif kwargs['api_exec'] == "N":
+                query = f"INSERT INTO {self.table_name} (apiexec, customernumber, datetime, list_name, number_of_calls) \
+                VALUES ('{kwargs['api_exec']}', '{kwargs['customer_number']}', '{kwargs['date_time_now']}', '{kwargs['list_name']}', '{kwargs['calls']}'+0)"
             print(query)
 
         elif op == "update":
-            query = f"UPDATE {self.table_name} SET 'update' = '{kwargs['update']}', number_of_calls = {kwargs['calls']} \
-            WHERE id = {kwargs['phone_id']}"
+            if kwargs['api_exec'] == "Y":
+                query = f"UPDATE {self.table_name} SET 'update' = '{kwargs['update']}', 'number_of_calls' = {kwargs['calls']}+1 \
+                WHERE id = {kwargs['phone_id']}, apiexec = 'Y'"
+            elif kwargs['api_exec'] == "N":
+                query = f"UPDATE {self.table_name} SET 'update' = '{kwargs['update']}', 'number_of_calls' = {kwargs['calls']}+1 \
+                WHERE id = {kwargs['phone_id']}"
             print(query)
 
         else:
@@ -75,7 +83,7 @@ class OutboundEngine:
             SourcePhoneNumber=source_phone_number
         )
         print(destination_number + " Called")
-        print(str(response))
+        # print(str(response))
 
     def run_list(self, df, list_name):
         for customer_number in df['Address']:
@@ -89,8 +97,8 @@ class OutboundEngine:
                     self.outbound_call(customer_number)
                     self.call_db(op="insert", api_exec="Y", customer_number="0" + customer_number_str,
                                  date_time_now=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                                 list_name=list_name)
-                    time.sleep(30)
+                                 list_name=list_name, calls='number_of_calls')
+                    # time.sleep(30)
                     switch = False
                 else:
                     # time.sleep(10)
@@ -98,7 +106,7 @@ class OutboundEngine:
                     if waiting_time == 10:
                         self.call_db(op="insert", api_exec="N", customer_number="0" + customer_number_str,
                                      date_time_now=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                                     list_name=list_name)
+                                     list_name=list_name, calls='number_of_calls')
                         waiting_time = 0
                         switch = False
 
@@ -117,8 +125,8 @@ class OutboundEngine:
                     self.outbound_call(customer_number)
                     self.call_db(op="update", phone_id=phone_id,
                                  update=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                                 calls='number_of_calls+1')
-                    time.sleep(30)
+                                 calls='number_of_calls', api_exec="Y")
+                    # time.sleep(30)
                     switch = False
 
                 else:
@@ -127,7 +135,7 @@ class OutboundEngine:
                     if waiting_time == 10:
                         self.call_db(op="update", phone_id=phone_id,
                                      update=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                                     calls="number_of_calls")
+                                     calls="number_of_calls", api_exec="N")
                         waiting_time = 0
                         switch = False
 
