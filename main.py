@@ -176,7 +176,6 @@ print(f"Task Started every {OutboundNG.option_repeat_x_minutes} Mins")
 def doc():
     return render_template('doc.html')
 
-# Add change
-# Add from Github
+
 if __name__ == '__main__':
     app.run(debug=False, port=5000)
